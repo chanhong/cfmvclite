@@ -1,0 +1,30 @@
+
+ul.m-siteNavigation {
+	background-color: #CCCCCC ;
+	font-size: 16px ;
+	height: 35px ;
+	line-height: 36px ;
+	list-style-type: none ;
+	margin: 0px 0px 0px 0px ;
+	overflow: hidden ;
+	padding: 0px 0px 0px 0px ;
+	}
+
+ul.m-siteNavigation li.navItem {
+	float: left ;
+	}
+
+ul.m-siteNavigation li.rightNavItem {
+	float: right ;
+	}
+
+ul.m-siteNavigation a {
+	display: block ;
+	padding: 0px 20px 0px 20px ;
+	text-decoration: none ;
+	}
+
+ul.m-siteNavigation li.activeNavItem a {
+	background-color: #333333 ;
+	color: #FFFFFF ;
+	}

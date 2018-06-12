@@ -1,0 +1,23 @@
+
+a.m-siteTitle {
+	color: #333333 ;
+	display: block ;
+	font-family: "Yanone Kaffeesatz" ;
+	font-size: 34px ;
+	height: 39px ;
+	line-height: 39px ;
+	text-decoration: none ;
+	}
+
+a.m-siteTitle span.primary {
+	display: inline-block ;
+	font-weight: 700 ;
+	text-transform: uppercase ;
+	}
+
+a.m-siteTitle span.secondary {
+	color: #CCCCCC ;
+	display: inline-block ;
+	font-weight: 200 ;
+	margin-left: 4px ;
+	}
