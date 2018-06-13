@@ -24,7 +24,13 @@ component
             return local.dsn;
         }
 
-        query function select(string tname, struct rc) {
+        numeric function getNextId(string tname, string fldname) {
+            local.qa = QueryExecute("select max(#fldname#) as cnt from #tname#");
+            local.newid = local.qa.cnt +1;
+            return local.newid;
+        }
+
+        query function read(string tname, struct rc) {
 
             if (isNull(tname)) return;
 

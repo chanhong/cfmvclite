@@ -16,7 +16,7 @@
 <script type="text/javascript">
 	function deleteRecord(id,label) {
 		if (confirm("Delete " + label + "?")) {
-			location.href='views/admin/asset.cfm?id=' + id + '&action=delete'
+			location.href='?cfc=company.delete&id=' + id
 		}
 	}
 </script>

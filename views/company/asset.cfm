@@ -2,7 +2,10 @@
 
 <!--- handle record save --->
 <cfif isdefined("url.cfc") and url.cfc is "delete">
+	<!---
 	<cfset rc.mvc.cfc.Asset.deleteRecord(id=url.id)>
+	--->
+	<cfset rc.mvc.models.asset.delete(id=url.id)>
 	<cflocation url="../index.cfm">
 </cfif>
 <!--- handle record save --->
@@ -11,7 +14,7 @@
 		<!---
 		<cfset newId = rc.mvc.cfc.Asset.createRecord(
 		--->
-		<cfset newId = rc.mvc.models.asset.createRecord(
+		<cfset newId = rc.mvc.models.asset.create(
 			title = form.title,
 			idCompany = form.idCompany,
 			description = form.description,
@@ -21,7 +24,7 @@
 		)>
 	<cfelse>
 		<!--- cfset newId = rc.mvc.cfc.Asset.updateRecord_old( --->
-		<cfset newId = rc.mvc.models.asset.updateRecord(
+		<cfset newId = rc.mvc.models.asset.update(
 			title = form.title,
 			idCompany = form.idCompany,
 			description = form.description,

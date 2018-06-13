@@ -10,6 +10,6 @@ component accessors=true extends="_basemodel" hint="Company Table CRUD" output="
         }
         rc.where = "endtime is null#local.one#";
         rc.orderby = "companyName";
-        return select("company", rc);
+        return read("company", rc);
     }
 }

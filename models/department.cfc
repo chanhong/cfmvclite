@@ -48,7 +48,7 @@ writeDump(var=[
     }
     */
     public query function get(rc) {
-        return select("department", rc);
+        return read("department", rc);
     }
             
 

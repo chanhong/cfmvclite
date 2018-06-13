@@ -33,86 +33,6 @@
 	</cffunction>
 
 
-	<cffunction name="createRecord" access="remote" roles="admin,superadmin" returntype="Numeric">
-		
-		<cfargument name="title" required="yes" type="string">
-		<cfargument name="idCompany" required="yes" type="numeric">
-		<cfargument name="description" required="yes" type="string">
-		<cfargument name="contentUrl" required="yes" type="string">
-		<cfargument name="idAssetType" required="yes" type="numeric">
-		<cfargument name="fullContent" required="no" type="string" default="">
-		
-		<cfif isdefined("form.fileUpload") and form.fileupload is not "">
-			<cfset local.filename = uploadFile()>
-		<cfelse>
-			<cfset local.filename = "">
-		</cfif>
-		
-		<cfquery result="local.stResult">
-			insert into Asset (
-				filename, title, idCompany, description, contentUrl, idAssetType, fullContent,updateuser, updatedate, begintime
-			)
-			values (
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#local.filename#">,
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.title#" >,
-				<cfqueryparam cfsqltype="cf_sql_numeric" value="#arguments.idCompany#" >,
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.description#">,
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contentUrl#">,
-				<cfqueryparam cfsqltype="cf_sql_numeric" value="#arguments.idAssetType#">,
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.fullContent#">,
-				<cfqueryparam cfsqltype="cf_sql_varchar" value="#getAuthUser()#">,
-				<cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-				<cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-			)
-			
-		</cfquery>
-		
-		<!--- cfreturn local.stResult.getPrefix().generatedkey --->
-		<cfreturn local.stResult.generatedKey>
-		
-	</cffunction>
-
-
-
-
-	<cffunction name="updateRecord" access="public" roles="admin,superadmin" returntype="Numeric">
-		
-		<cfargument name="id" required="yes" type="numeric">
-		<cfargument name="title" required="yes" type="string">
-		<cfargument name="idCompany" required="yes" type="numeric">
-		<cfargument name="description" required="yes" type="string">
-		<cfargument name="contentUrl" required="yes" type="string">
-		<cfargument name="idAssetType" required="yes" type="numeric">
-		<cfargument name="fullContent" required="no" type="string" default="">
-		
-		<cfif isdefined("form.fileUpload") and form.fileupload is not "">
-			<cfset local.filename = uploadFile()>
-		<cfelse>
-			<cfset local.filename = "">
-		</cfif>
-		
-		<cfquery result="local.stResult">
-			update Asset 
-			 set 
-			 title = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.title#" >,
-			 <cfif local.filename is not "">
-			 filename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.filename#">,
-			 </cfif>
-			 idCompany = <cfqueryparam cfsqltype="cf_sql_numeric" value="#arguments.idCompany#" >,
-			 description = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.description#">,
-			 contentUrl = 	<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.contentUrl#">,
-			 idAssetType = <cfqueryparam cfsqltype="cf_sql_numeric" value="#arguments.idAssetType#">,
-			 fullContent = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.fullContent#">,
-			 updateuser = <cfqueryparam cfsqltype="cf_sql_varchar" value="#getAuthUser()#">,
-			 updatedate = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-			 begintime = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-		  where id = <cfqueryparam cfsqltype="cf_sql_numeric" value="#arguments.id#">
-		</cfquery>
-		
-		<cfreturn arguments.id>
-		
-	</cffunction>
-
 
 	<cffunction name="get" access="remote" returntype="query" httpMethod="GET" >
 		<cfargument name="searchterm" required="false" type="string" default="" restargsource="query">
@@ -165,25 +85,6 @@
 		
 	</cffunction>
 	
-	
-	<cffunction name="deleteRecord" access="public" roles="admin,superadmin" returntype="struct">
-		<cfargument name="id" type="numeric" required="true">
-		
-		<cfquery>
-			update asset
-			set 
-			endtime = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-			updateuser = <cfqueryparam cfsqltype="cf_sql_varchar" value="#getAuthUser()#">
-			where id = <cfqueryparam cfsqltype="cf_sql_numeric" value="#arguments.id#">
-		</cfquery>
-		
-		<cfreturn {
-			  id =  arguments.id,
-			  success = true
-		}> 
-		
-	</cffunction>
-
 	<cffunction name="downloadBioPDFFile" access="remote" returntype="void">
 		
 			<cfargument name="id" type="numeric" required="true">

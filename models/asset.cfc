@@ -1,7 +1,7 @@
 component accessors=true extends="_basemodel" hint="CRUD for the Asset Table" output="false" rest="true"
 {
     
-        numeric function updateRecord(
+        numeric function update(
             numeric id,
             string title,
             numeric idCompany,
@@ -49,13 +49,11 @@ component accessors=true extends="_basemodel" hint="CRUD for the Asset Table" ou
             return arguments.id;
        }   
 
-      numeric function createRecord(string title, numeric idCompany, string description
+      numeric function create(string title, numeric idCompany, string description
       string contentUrl, numeric idAssetType, string  fullContent="") roles="admin,superadmin" 
       {
-        
-        local.qa = QueryExecute("select max(id) as cnt from Asset");
-        local.newid = local.qa.cnt +1;
-        
+        local.newid = getNextId("Asset", "id");
+
 		if (isdefined("form.fileUpload") and form.fileupload is not "") {
 			local.filename = uploadFile();
         } else{
@@ -66,37 +64,8 @@ component accessors=true extends="_basemodel" hint="CRUD for the Asset Table" ou
         local.sql = "insert into Asset (
             id, title, filename, idCompany, description, contentUrl, idAssetType, fullContent, updateuser, updatedate, begintime
         )
-        values (?,?,?,?,?,?,?,?,?,?)
+        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ";
-/*
-        values (
-            #local.newid#,
-            '#arguments.title#',
-            '#local.filename#',
-            #arguments.idCompany#,
-            '#arguments.description#',
-            '#arguments.contentUrl#',
-            #arguments.idAssetType#,
-            '#arguments.fullContent#',
-            '#getAuthUser()#',
-            '#local.y#',
-            '#local.y#'
-        )
-        values (
-        :newid,
-        :title,
-        :filename,
-        :idCompany,
-        :description,
-        :contentUrl,
-        :idAssetType,
-        :fullContent,
-        :updateuser,
-        :updatedate,
-        :begintime
-        )
-        */
-        
         local.param=[
             "#local.newid#",
             "#arguments.title#",
@@ -110,24 +79,32 @@ component accessors=true extends="_basemodel" hint="CRUD for the Asset Table" ou
             "#local.y#",
             "#local.y#"
         ];
-/*
-        local.param={
-            id="#local.newid#",
-            title = "#arguments.title#",
-            filename = "#local.filename#",
-            idCompany = "#arguments.idCompany#",
-            description = "#arguments.description#",
-            contentUrl = "#arguments.contentUrl#",
-            idAssetType = "#arguments.idAssetType#",
-            fullContent = "#arguments.fullContent#",
-            updateuser = "#getAuthUser()#",
-            updatedate = "#local.y#",
-            begintime = "#local.y#"
-        };
-        */
         stResult = QueryExecute(local.sql, local.param);   
-        writeoutput(local.sql);
         return local.newid;
     }	
+
+	struct function delete(struct rc) roles="admin,superadmin" {
+        
+        local.y=LSDateFormat(now(),"mm/dd/yyyy","English (US)");
+        local.sql = "
+        update asset
+        set 
+        endtime =:endtime,
+        updateuser = :updateuser
+        where id=:id";
+
+        local.param={
+            endtime = local.y,
+            updateuser = getAuthUser(),
+            id=rc.id
+        };
+        local.stResult = QueryExecute(local.sql, local.param);            
+		return {
+			  id =  rc.id,
+			  success = true
+		}; 
+    }		
+
+
 }
 

@@ -23,6 +23,15 @@ component extends="_basecontroller" {
         rc.cfcFolder = "cfc";
     }    
     
+    function delete(rc) {
+        if (isdefined("url.id")) {
+            rc.id = url.id;
+        }
+        rc.asset = rc.mvc.models.asset.init(rc.datasources.pmdsn); 
+        rc.asset.delete(rc);  
+        rc.b.redirect( "company.index" );      
+    }
+
     function list( rc ) {
         rc.data = rc.model.get(rc);  
         rc.title = "Company List";
