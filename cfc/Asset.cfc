@@ -1,20 +1,5 @@
 <cfcomponent hint="CRUD for the Asset Table" output="false" rest="true" restpath="asset">
 
-	<cffunction name="uploadFile" access="public" roles="admin,superadmin" returntype="string">
-		
-		<cfset var stData = {}>
-		
-		<cffile action="upload"
-			destination="#application.uploaddir#" 
-			filefield="fileupload"
-			accept="image/jpg,image/jpeg"
-			nameconflict="makeunique" 
-			result="stData">
-		
-		<cfreturn stdata.serverfile>
-		
-	</cffunction>
-	
 	<cffunction name="downloadFile" access="remote" returntype="void">
 		
 			<cfargument name="id" type="numeric" required="true">

@@ -1,6 +1,6 @@
 // it can't extends due to using include in _basemodel.cfc
 component 
-    accessors=true hint="Base Model" output="false" {
+    accessors=true extends="db" hint="Base Model" output="false" {
 
         if (isNull(ut)) {
             ut = new util();
