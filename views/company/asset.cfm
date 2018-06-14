@@ -1,15 +1,15 @@
 <cfparam name="url.id" default="0">
 <!--- handle record save --->
 <cfif isdefined("url.cfc") and url.cfc is "delete">
-	<cfset rc.mvc.models.asset.delete(id=url.id)>
+	<cfset rc.mvc.models.asset.markAsDelete(id=url.id)>
 	<cflocation url="../index.cfm">
 </cfif>
 <!--- handle record save --->
 <cfif isdefined("form.btnSubmit")>
 	<cfif form.id is 0>
-		<cfset newId = rc.mvc.models.asset.create(rc, form)>
+		<cfset newId = rc.mvc.models.asset.createRec(rc, form)>
 	<cfelse>
-		<cfset newId = rc.mvc.models.asset.update(rc, form)>
+		<cfset newId = rc.mvc.models.asset.updateRec(rc, form)>
 	</cfif>
 	
 	<cfoutput>

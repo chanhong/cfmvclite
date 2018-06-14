@@ -18,6 +18,8 @@ Features:
 
 . MVC consister of a handful of shared cfc such as: Loader to load cfc, Router, Helper, Utility, etc
 
+. basic CRUD on the basemodel
+
 . Option to use DAO https://github.com/abramadams/dao
 
 . Use JQuery, Bootstrap, Telerik Kendo-UI core https://github.com/telerik/kendo-ui-core
@@ -26,9 +28,14 @@ Features:
 
 
 
+
 Need work:
 
-. Incomplete shared basemodel.cfc, it only has read and still need insert, update and delete (CRUD)
+. Incomplete shared basemodel.cfc, it only has basic CRUD
+
+. Incomplete security login
+
+. Need to look at routing
 
 
 

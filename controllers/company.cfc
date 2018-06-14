@@ -28,7 +28,7 @@ component extends="_basecontroller" {
             rc.id = url.id;
         }
         rc.asset = rc.mvc.models.asset.init(rc.datasources.pmdsn); 
-        rc.asset.delete(rc);  
+        rc.asset.markAsDelete(rc);  
         rc.b.redirect( "company.index" );      
     }
 

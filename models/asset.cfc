@@ -13,106 +13,108 @@ component accessors=true extends="_basemodel" hint="CRUD for the Asset Table" ou
 		return stdata.serverfile;
        }
 
-    numeric function update(struct rc, any iform
+    struct function markAsDelete(any rc) roles="admin,superadmin" {
+
+        local.y=LSDateFormat(now(),"mm/dd/yyyy","English (US)");
+        structAppend(rc, {
+            fl = "endtime=:endtime,updateuser=:updateuser",
+            where = "id=:id",
+            param ={
+                endtime = local.y,
+                updateuser = getAuthUser(),
+                id=rc.id
+            }
+        });
+        local.stResult = update("asset", rc);
+		return {
+            id =  rc.id,
+            success = true
+		}; 
+    }		
+
+    numeric function updateRec(struct rc, any iform
         ) access="public" roles="admin,superadmin" {
 
             local.dsn = getDsn(rc);
             if (isdefined("iform.fileUpload") and iform.fileupload is not "") {
-                local.filename = uploadFile();
+                local.filename = escapeQuote(uploadFile());
             } else {
                 local.filename = "";
             };
 
             local.y=LSDateFormat(now(),"mm/dd/yyyy","English (US)");
-            local.sql = "
-            update Asset 
-            set 
+
+            local.fl = "
             title = :title,
             filename = :filename,
             idCompany = :idCompany,
             description = :description,
-            contentUrl = 	:contentUrl,
+            contentUrl = :contentUrl,
             idAssetType = :idAssetType,
             fullContent = :fullContent,
             updateuser = :updateuser,
             updatedate = :updatedate,
-            begintime =:begintime
-            where id=:id";
-            local.param={
-                title = iform.title,
+            begintime =:begintime";
+
+            local.param ={
+                title = escapeQuote(iform.title),
                 filename = local.filename,
                 idCompany = iform.idCompany,
-                description = iform.description,
-                contentUrl = iform.contentUrl,
+                description = escapeQuote(iform.description),
+                contentUrl = escapeQuote(iform.contentUrl),
                 idAssetType = iform.idAssetType,
-                fullContent = iform.fullContent,
+                fullContent = escapeQuote(iform.fullContent),
                 updateuser = getAuthUser(),
                 updatedate = local.y,
                 begintime = local.y,
                 id=iform.id
             };
-            local.stResult = QueryExecute(local.sql, local.param, {datasource = local.dsn});            
+
+            structAppend(rc, {
+                fl = local.fl,
+                where = "id=:id",
+                param = local.param
+            });
+            local.stResult = update("asset", rc);
             return iform.id;
        }   
 
-      numeric function create(struct rc, any iform
+      numeric function createRec(struct rc, any iform
       ) roles="admin,superadmin" 
       {
         local.dsn = getDsn(rc);          
         local.newid = getNextId("Asset", "id");
 
         if (isdefined("iform.fileUpload") and iform.fileupload is not "") {
-			local.filename = uploadFile();
+			local.filename = escapeQuote(uploadFile());
         } else{
             local.filename = "";
         };
 		
         local.y=LSDateFormat(now(),"mm/dd/yyyy","English (US)");
-        local.sql = "insert into Asset 
-        (id, title, filename, idCompany, description, contentUrl, idAssetType, fullContent, updateuser, updatedate, begintime)
-        values 
-        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ";
+        local.fl = "(id, title, filename, idCompany, description, contentUrl, idAssetType, fullContent, updateuser, updatedate, begintime)
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         local.param=[
             "#local.newid#",
-            "#iform.title#",
+            "#escapeQuote(iform.title)#",
             "#local.filename#",
             "#iform.idCompany#",
-            "#iform.description#",
-            "#iform.contentUrl#",
+            "#escapeQuote(iform.description)#",
+            "#escapeQuote(iform.contentUrl)#",
             "#iform.idAssetType#",
-            "#iform.fullContent#",
+            "#escapeQuote(iform.fullContent)#",
             "#getAuthUser()#",
             "#local.y#",
             "#local.y#"
         ];
-        stResult = QueryExecute(local.sql, local.param, {datasource = local.dsn});   
+        structAppend(rc, {
+            fl = local.fl,
+            param = local.param
+        });
+        local.stResult = create("asset", rc);
         return local.newid;
     }	
-
-	struct function delete(struct rc) roles="admin,superadmin" {
-
-        local.dsn = getDsn(rc);
-        local.y=LSDateFormat(now(),"mm/dd/yyyy","English (US)");
-        local.sql = "
-        update asset
-        set 
-        endtime =:endtime,
-        updateuser = :updateuser
-        where id=:id";
-
-        local.param={
-            endtime = local.y,
-            updateuser = getAuthUser(),
-            id=rc.id
-        };
-        local.stResult = QueryExecute(local.sql, local.param, {datasource = local.dsn});            
-		return {
-			  id =  rc.id,
-			  success = true
-		}; 
-    }		
-
 
 }
 

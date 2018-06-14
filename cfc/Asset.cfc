@@ -22,12 +22,6 @@
 	<cffunction name="get" access="remote" returntype="query" httpMethod="GET" >
 		<cfargument name="searchterm" required="false" type="string" default="" restargsource="query">
 		<cfargument name="id" type="numeric" required="false" default="-1" restargsource="query">
-		
-		<cfif isdefined("url.init") or trim(arguments.searchterm) is not "" or arguments.id gt 0>
-			<cfset local.timespan = createtimespan(0,0,0,0)>
-		<cfelse>
-			<cfset local.timespan = createTimeSpan(0,0,5,0)>
-		</cfif>
 	<cfset qry=""/>
 	<cfset qwhere0=""/>
 	<cfset qwhere1=""/>
@@ -51,7 +45,7 @@
 			where 	asset.endtime is null"/>
 
 			<cfset qorder = " order by updatedate desc"/>
-		<cfquery name="local.q" cachedwithin="#local.timespan#">
+		<cfquery name="local.q">
 			#qry# 
 			<cfif arguments.searchterm is not "">
 				and (
