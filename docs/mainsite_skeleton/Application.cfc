@@ -52,7 +52,7 @@ this.ld = this.core.scfcs.loader;
 this.rt = this.core.scfcs.router;
 this.ut = this.core.scfcs.util;
 this.hlp = this.core.scfcs.helper;
-this.db = this.core.scfcs.dao;
+this.dao = this.core.scfcs.dao;
 // alias to the long version 
 
 request.scfcPath = mvclite_scfcsPath(this.cfg); // must be here before loading controolers

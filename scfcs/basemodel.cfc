@@ -1,5 +1,5 @@
 // it can't extends due to using include in _basemodel.cfc
-component accessors=true extends="db" hint="Base Model" output="false" {
+component accessors=true hint="Base Model" output="false" {
 
     if (isNull(ut)) {
         ut = new util();
@@ -22,7 +22,7 @@ component accessors=true extends="db" hint="Base Model" output="false" {
         }
         return local.dsn;
     }
-    void function dError(msg = "") {
+    void function dError(msg = "", error) {
        
         if (len(msg)>0) {
             writeoutput('<pre>' & msg & '</pre><br />');
@@ -33,10 +33,24 @@ component accessors=true extends="db" hint="Base Model" output="false" {
 
         // clean \' into single quote before double it
         ret = (len(iStr)>0) 
-            ? REReplaceNoCase(REReplaceNoCase(iStr,"\\'", "'", 'ALL'), "'", "''", 'ALL') 
+//        ? REReplaceNoCase(REReplaceNoCase(iStr,"\\'", "'", 'ALL'), "'", "''", 'ALL') 
+            ? REReplaceNoCase(iStr,"\\'", "'", 'ALL')
             : "";
         return ret;
     }
+
+
+    function clean(struct param) {
+
+        out = {};
+        structKeys = structKeyArray(param);
+        for (onekey in structKeys) {
+            out[onekey] = escapeQuote(EncodeForHTML(param[onekey]));
+        }
+        return out;
+    }
+
+
     numeric function getNextId(string tname, string fldname) {
         local.qa = QueryExecute("select max(#fldname#) as cnt from #tname#");
         local.newid = local.qa.cnt +1;
@@ -62,7 +76,7 @@ component accessors=true extends="db" hint="Base Model" output="false" {
             local.orderby = " order by " & rc.orderby;
         } 
         if (StructKeyExists(rc, "param")) { // if init
-            local.param = rc.param;
+            local.param = clean(rc.param);
         }
         local.sql = "select " & local.fl & " from "& tname & local.filter & local.orderby;
         // clear rc variables
@@ -72,7 +86,7 @@ component accessors=true extends="db" hint="Base Model" output="false" {
         try {
             return QueryExecute(local.sql, local.param, {datasource = local.dsn} );
         } catch (any error) {
-            dError(sql);
+            dError(sql, error);
         }
     }            
 
@@ -88,7 +102,7 @@ component accessors=true extends="db" hint="Base Model" output="false" {
             local.filter = " where " & rc.where;
         } 
         if (StructKeyExists(rc, "param")) { // if init
-            local.param = rc.param;
+            local.param = clean(rc.param);
         }
         local.sql = "delete from "& tname & local.filter;
         // clear rc variables
@@ -97,7 +111,7 @@ component accessors=true extends="db" hint="Base Model" output="false" {
         try {
             return QueryExecute(local.sql, local.param, {datasource = local.dsn} );
         } catch (any error) {
-            dError(sql);
+            dError(sql, error);
         }
     }            
 
@@ -118,7 +132,7 @@ component accessors=true extends="db" hint="Base Model" output="false" {
             local.filter = " where " & rc.where;
         } 
         if (StructKeyExists(rc, "param")) { // if init
-            local.param = rc.param;
+            local.param = clean(rc.param);
         }
         local.sql = "update #tname# set #local.fl# #local.filter#";
         // clear rc variables
@@ -127,7 +141,7 @@ component accessors=true extends="db" hint="Base Model" output="false" {
         try {
             return QueryExecute(local.sql, local.param, {datasource = local.dsn} );
         } catch (any error) {
-            dError(sql);
+            dError(sql, error);
         }
     }            
 
@@ -143,7 +157,7 @@ component accessors=true extends="db" hint="Base Model" output="false" {
             local.fl = rc.fl;
         } 
         if (StructKeyExists(rc, "param")) { // if init
-            local.param = rc.param;
+            local.param = clean(rc.param);
         }
         local.sql = "insert into #tname# #local.fl#";
         // clear rc variables
@@ -152,7 +166,7 @@ component accessors=true extends="db" hint="Base Model" output="false" {
         try {
             return QueryExecute(local.sql, local.param, {datasource = local.dsn} );
         } catch (any error) {
-            dError(sql);
+            dError(sql, error);
         }
     }            
 

@@ -37,7 +37,7 @@ component accessors=true extends="_basemodel" hint="CRUD for the Asset Table" ou
 
             local.dsn = getDsn(rc);
             if (isdefined("iform.fileUpload") and iform.fileupload is not "") {
-                local.filename = escapeQuote(uploadFile());
+                local.filename = uploadFile();
             } else {
                 local.filename = "";
             };
@@ -57,13 +57,13 @@ component accessors=true extends="_basemodel" hint="CRUD for the Asset Table" ou
             begintime =:begintime";
 
             local.param ={
-                title = escapeQuote(iform.title),
+                title = iform.title,
                 filename = local.filename,
                 idCompany = iform.idCompany,
-                description = escapeQuote(iform.description),
-                contentUrl = escapeQuote(iform.contentUrl),
+                description = iform.description,
+                contentUrl = iform.contentUrl,
                 idAssetType = iform.idAssetType,
-                fullContent = escapeQuote(iform.fullContent),
+                fullContent = iform.fullContent,
                 updateuser = getAuthUser(),
                 updatedate = local.y,
                 begintime = local.y,
@@ -97,13 +97,13 @@ component accessors=true extends="_basemodel" hint="CRUD for the Asset Table" ou
 
         local.param=[
             "#local.newid#",
-            "#escapeQuote(iform.title)#",
+            "#iform.title#",
             "#local.filename#",
             "#iform.idCompany#",
-            "#escapeQuote(iform.description)#",
-            "#escapeQuote(iform.contentUrl)#",
+            "#iform.description#",
+            "#iform.contentUrl#",
             "#iform.idAssetType#",
-            "#escapeQuote(iform.fullContent)#",
+            "#iform.fullContent#",
             "#getAuthUser()#",
             "#local.y#",
             "#local.y#"

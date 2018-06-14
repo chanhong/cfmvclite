@@ -50,7 +50,6 @@ component
 	this.rt = this.core.scfcs.router;
 	this.ut = this.core.scfcs.util;
 	this.hlp = this.core.scfcs.helper;
-	this.db = this.core.scfcs.db;
 	this.dao = this.core.scfcs.dao;
 	// alias to the long version 
 
