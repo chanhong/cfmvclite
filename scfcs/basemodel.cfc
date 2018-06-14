@@ -42,11 +42,18 @@ component accessors=true hint="Base Model" output="false" {
 
     function clean(struct param) {
 
+        // 0 ); delete from mytable where (1=1
         out = {};
         structKeys = structKeyArray(param);
         for (onekey in structKeys) {
-            out[onekey] = escapeQuote(EncodeForHTML(param[onekey]));
+            if (len(param[onekey])>0) {
+                out[onekey] = EncodeForHTML(param[onekey]);
+            } else {
+                out[onekey] = "";
+            }
         }
+        writedump(out);
+//        abort;
         return out;
     }
 
@@ -133,6 +140,7 @@ component accessors=true hint="Base Model" output="false" {
         } 
         if (StructKeyExists(rc, "param")) { // if init
             local.param = clean(rc.param);
+//            local.param = rc.param;
         }
         local.sql = "update #tname# set #local.fl# #local.filter#";
         // clear rc variables
